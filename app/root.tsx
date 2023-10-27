@@ -1,33 +1,27 @@
-import { cssBundleHref } from "@remix-run/css-bundle";
-import type { LinksFunction } from "@remix-run/node";
-import {
-  Links,
-  LiveReload,
-  Meta,
-  Outlet,
-  Scripts,
-  ScrollRestoration,
-} from "@remix-run/react";
+import { ChakraProvider, extendTheme } from "@chakra-ui/react";
+import { Outlet } from "@remix-run/react";
+import { Document } from "./Document";
+import AOS from "aos";
+import "aos/dist/aos.css";
+import React from "react";
 
-export const links: LinksFunction = () => [
-  ...(cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }] : []),
-];
+const theme = extendTheme({
+  fonts: {
+    Body: "montserrat",
+  },
+});
 
 export default function App() {
+  React.useEffect(() => {
+    AOS.init({
+      once: true,
+    });
+  }, []);
   return (
-    <html lang="en">
-      <head>
-        <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <Meta />
-        <Links />
-      </head>
-      <body>
+    <Document>
+      <ChakraProvider theme={theme}>
         <Outlet />
-        <ScrollRestoration />
-        <Scripts />
-        <LiveReload />
-      </body>
-    </html>
+      </ChakraProvider>
+    </Document>
   );
 }
